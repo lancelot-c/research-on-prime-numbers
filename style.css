@@ -1,0 +1,44 @@
+body
+{
+	font-family: 'Segoe UI WPC', 'Segoe UI', Tahoma, 'Microsoft Sans Serif', Verdana, sans-serif;
+	font-size: 0.7em;
+	margin: 0px;
+}
+
+table
+{
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+td
+{
+	text-align: center;
+	height: 25px;
+	width: 25px;
+	min-width: 25px;
+}
+
+/* Pour toute la 1ère colonne */
+tr td:first-child:after
+{
+	content: attr(data-n);
+}
+
+/* Pour les non-premiers */
+tr:not(.premier) td:first-child
+{
+	background: white;
+}
+
+/* Pour les premiers */
+tr.premier td:first-child
+{
+	color: white;
+	background: black;
+}
+
+tr.premier td:not([data-n="1"])
+{
+	border-top: 1px solid black;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="icon" href="chart_bar.ico" />
+        <title>Représentation des nombres</title>
+    </head>
+    <body>
+		<table>
+		<script>
+			// Choix de la taille du tableau
+			var tailleParDefaut = 100;
+			var taille = prompt("Jusqu'à quel nombre souhaitez-vous étendre la recherche ?", tailleParDefaut);
+			if (isNaN(taille))
+				taille = tailleParDefaut;
+			
+			// Génération d'une couleur par couche
+			var couleurs = new Array();
+			for (var i = 0; i<taille; i++)
+				couleurs.push(couleurAleatoire());
+				
+				
+			// Création des cases
+			for (var ligne = 0; ligne < taille; ligne++)
+			{ 
+				document.write("<tr>");
+				for (var colonne = 0; colonne < taille; colonne++)
+					document.write("<td data-x='"+(colonne+1)+"' data-y='"+(taille-ligne)+"' data-n='0'></td>");
+				document.write("</tr>");
+			}
+
+			
+			// Création des couches
+			for (var x = 1; x<=taille; x++)
+			{
+				var colonne = document.querySelectorAll('[data-x="'+x+'"]');
+				var couche = 1;
+				var briquesPosees = 1;
+				
+				for (var y = taille-1; y>=0; y--)
+				{
+					colonne[y].setAttribute('data-n', couche);
+					
+					if (colonne[y].getAttribute('data-x') != "1") // Ne pas enlever sinon l'attribut background:white; de la feuille de style sera ignoré
+						colonne[y].style.backgroundColor = couleurs[couche-1];;
+					
+					if (briquesPosees == x)
+					{
+						couche++;
+						briquesPosees = 1;
+					}
+					else
+					{
+						briquesPosees++;
+					}
+				}
+			}
+			
+
+
+			// Survol d'une case : affichage des coordonnées
+			var cases = document.getElementsByTagName("td");
+			for (var i = 0; i<cases.length; i++)
+			{
+				cases[i].onmouseover = function () {
+				var x = this.getAttribute('data-x');
+				var y = this.getAttribute('data-y');
+				var couche = this.getAttribute('data-n');
+				
+				document.title = 'x='+x+' y='+y+' couche='+couche;
+				};
+			}
+			
+						
+			// Mise en évidence des nombres premiers
+			var lignes = document.getElementsByTagName('tr');
+			for (var i = 2; i<=taille; i++)
+				if (estPremier(i))
+					lignes[taille-i].className = "premier";
+
+			
+
+			
+			function estPremier(n)
+			{
+				var y1 = document.querySelectorAll('[data-y="'+n+'"]');
+				var y2 = document.querySelectorAll('[data-y="'+(n+1)+'"]');
+				for (var i = 1; i<(n-1); i++)
+					if (y1[i].style.backgroundColor != y2[i].style.backgroundColor)
+						return false;
+					
+				return true;
+			}
+			
+			function couleurAleatoire()
+			{
+				return "#"+(Math.random().toString(16) + '000000').slice(2, 8);
+			}
+		</script>
+		</table>
+    </body>
+</html>
